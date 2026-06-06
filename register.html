@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - ECETX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+    .auth-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+      background-color: var(--bg-light);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow-xl);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .auth-header p {
+      color: var(--text-light);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+    .form-control {
+      padding: 0.75rem 1rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-light);
+    }
+    .auth-footer a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container animate-fadeIn">
+    <div class="auth-header">
+      <h1>🎓 ECETX</h1>
+      <p>Create your free account</p>
+    </div>
+
+    <form id="registerForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-control" placeholder="John" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-control" placeholder="Doe" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-control" placeholder="your@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Branch</label>
+        <select class="form-select" required id="branchSelect">
+          <option value="">Select your branch</option>
+          <option value="ece">Electronics & Communication Engineering</option>
+          <option value="eee">Electrical & Electronics Engineering</option>
+          <option value="cme">Computer Science & Engineering</option>
+          <option value="civil">Civil Engineering</option>
+          <option value="mechanical">Mechanical Engineering</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+        <label class="form-check-label" for="agreeTerms">I agree to the terms and conditions</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 btn-lg">Create Account</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a href="login.html">Sign in here</a></p>
+    </div>
+  </div>
+
+  <script src="assets/data/mockData.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/formValidator.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const registerForm = document.getElementById('registerForm');
+      
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const firstName = registerForm.querySelector('input[placeholder="John"]').value.trim();
+        const lastName = registerForm.querySelector('input[placeholder="Doe"]').value.trim();
+        const email = registerForm.querySelector('input[type="email"]').value.trim();
+        const branch = registerForm.querySelector('#branchSelect').value;
+        const password = registerForm.querySelectorAll('input[type="password"]')[0].value;
+        const confirmPassword = registerForm.querySelectorAll('input[type="password"]')[1].value;
+        const agreeTerms = registerForm.querySelector('#agreeTerms').checked;
+
+        // Validation
+        if (!firstName || !lastName || !email || !branch || !password || !confirmPassword) {
+          ToastManager?.error('Please fill in all fields');
+          return;
+        }
+
+        if (!agreeTerms) {
+          ToastManager?.error('Please agree to the terms and conditions');
+          return;
+        }
+
+        if (password.length < 6) {
+          ToastManager?.error('Password must be at least 6 characters');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          ToastManager?.error('Passwords do not match');
+          return;
+        }
+
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!isValidEmail) {
+          ToastManager?.error('Please enter a valid email address');
+          return;
+        }
+
+        // Simulate registration
+        ToastManager?.info('Creating your account...');
+        
+        setTimeout(() => {
+          const userData = {
+            firstName,
+            lastName,
+            email,
+            branch,
+            registrationDate: new Date().toISOString(),
+            verified: false
+          };
+          
+          localStorage.setItem('user-email', email);
+          localStorage.setItem('user-data', JSON.stringify(userData));
+          localStorage.setItem('ecetx-selected-branch', branch);
+          
+          // Send verification email
+          if (window.formValidator) {
+            window.formValidator.submitEmail(email, 'registration').then(() => {
+              setTimeout(() => {
+                window.location.href = 'dashboard.html';
+              }, 500);
+            });
+          } else {
+            ToastManager?.success('Account created successfully!');
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 500);
+          }
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>

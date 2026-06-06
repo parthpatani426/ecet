@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rank Predictor - ECETX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    body { padding-top: 70px; }
+    .predictor-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+    .predictor-card { padding: 2rem; border-radius: 12px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); margin-bottom: 2rem; }
+    .form-group label { font-weight: 600; }
+    .result-card { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 2rem; border-radius: 12px; text-align: center; display: none; }
+    .result-card.show { display: block; }
+    .predicted-rank { font-size: 3rem; font-weight: 700; margin: 1rem 0; }
+    .rank-info { font-size: 1.1rem; margin: 0.5rem 0; }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="predictor-container">
+    <div style="margin-bottom: 2rem;">
+      <h1>📈 Rank Predictor</h1>
+      <p style="color: var(--text-light);">Predict your ECET rank based on your performance</p>
+    </div>
+
+    <!-- Predictor Form -->
+    <div class="predictor-card">
+      <form id="predictorForm">
+        <div class="form-group mb-3">
+          <label>Your Current Score</label>
+          <input type="number" class="form-control" id="currentScore" placeholder="e.g., 6500" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Your Test Accuracy (%)</label>
+          <input type="number" class="form-control" id="accuracy" placeholder="e.g., 78.5" min="0" max="100" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Mock Tests Attempted</label>
+          <input type="number" class="form-control" id="mockTests" placeholder="e.g., 5" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Study Hours (This Week)</label>
+          <input type="number" class="form-control" id="studyHours" placeholder="e.g., 15" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Your Branch</label>
+          <select class="form-select" id="branchSelect" required>
+            <option value="">Select Branch</option>
+            <option value="ece">Electronics & Communication</option>
+            <option value="eee">Electrical & Electronics</option>
+            <option value="cme">Computer Science</option>
+            <option value="civil">Civil Engineering</option>
+            <option value="mechanical">Mechanical Engineering</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">Predict My Rank</button>
+      </form>
+    </div>
+
+    <!-- Result Card -->
+    <div class="result-card" id="resultCard">
+      <h2>Your Predicted Rank</h2>
+      <div class="predicted-rank" id="predictedRank">#156</div>
+      <div class="rank-info">You are likely to rank in the <strong id="rankCategory">Top 500</strong></div>
+      <div class="rank-info" style="font-size: 0.9rem; opacity: 0.9;">Based on your current performance and study habits</div>
+      <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+        <div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">Estimated Score</div>
+          <div style="font-size: 1.5rem; font-weight: 700;" id="estimatedScore">6,800</div>
+        </div>
+        <div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">Target: Top 100</div>
+          <div style="font-size: 1.5rem; font-weight: 700;">+250 points</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="predictor-card">
+      <h3>💡 Tips to Improve Your Rank</h3>
+      <ul style="margin: 0; padding-left: 1.5rem;">
+        <li>Increase study hours to 20+ per week</li>
+        <li>Focus on weak topics identified in your analysis</li>
+        <li>Attempt at least 10 full-length mock tests</li>
+        <li>Maintain a consistent study streak</li>
+        <li>Review and learn from mistakes in previous tests</li>
+      </ul>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('components/navbar.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#navbar-container').innerHTML = h);
+      fetch('components/footer.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#footer-container').innerHTML = h);
+
+      document.getElementById('predictorForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        predictRank();
+      });
+    });
+
+    function predictRank() {
+      const score = parseFloat(document.getElementById('currentScore').value);
+      const accuracy = parseFloat(document.getElementById('accuracy').value);
+      const mockTests = parseInt(document.getElementById('mockTests').value);
+      const studyHours = parseInt(document.getElementById('studyHours').value);
+
+      // Simple prediction algorithm
+      let predictedScore = score;
+      predictedScore += accuracy * 10;
+      predictedScore += mockTests * 50;
+      predictedScore += studyHours * 20;
+
+      // Normalize to rank
+      const predictedRank = Math.max(1, Math.round(5000 - (predictedScore / 10)));
+      const estimatedFinalScore = Math.round(score + (accuracy * 5) + (mockTests * 50));
+
+      // Update result card
+      document.getElementById('resultCard').classList.add('show');
+      document.getElementById('predictedRank').textContent = '#' + predictedRank;
+      document.getElementById('estimatedScore').textContent = estimatedFinalScore.toLocaleString();
+
+      if (predictedRank <= 100) {
+        document.getElementById('rankCategory').textContent = 'Top 100';
+      } else if (predictedRank <= 500) {
+        document.getElementById('rankCategory').textContent = 'Top 500';
+      } else if (predictedRank <= 1000) {
+        document.getElementById('rankCategory').textContent = 'Top 1000';
+      } else {
+        document.getElementById('rankCategory').textContent = 'Top 5000';
+      }
+
+      // Scroll to result
+      document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

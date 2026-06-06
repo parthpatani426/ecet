@@ -1,0 +1,225 @@
+<!-- ECETX Footer Component -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <!-- About Section -->
+      <div class="footer-section">
+        <h4>About ECETX</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Learning Section -->
+      <div class="footer-section">
+        <h4>Learning</h4>
+        <ul>
+          <li><a href="learn.html">Browse Courses</a></li>
+          <li><a href="practice.html">Practice Problems</a></li>
+          <li><a href="mock-tests.html">Mock Tests</a></li>
+          <li><a href="ai-tutor.html">AI Tutor</a></li>
+        </ul>
+      </div>
+
+      <!-- Support Section -->
+      <div class="footer-section">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Community</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Section -->
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Disclaimer</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter Section -->
+      <div class="footer-section">
+        <h4>Stay Updated</h4>
+        <p class="footer-text">Subscribe to our newsletter for updates and resources.</p>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Your email" required class="form-control" style="margin-bottom: 0.5rem;">
+          <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; 2024 ECETX - Premium Learning Platform. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#" title="Twitter">𝕏</a>
+        <a href="#" title="LinkedIn">in</a>
+        <a href="#" title="GitHub">⚙</a>
+        <a href="#" title="Instagram">📷</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* Footer Styles */
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: 3rem 0 1rem;
+  margin-top: 4rem;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section h4 {
+  font-size: 1rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.footer-section ul {
+  list-style: none;
+}
+
+.footer-section li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.footer-section a:hover {
+  color: var(--primary);
+  padding-left: 5px;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.newsletter-form input {
+  padding: 0.6rem 1rem;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-tertiary);
+  color: var(--text-dark);
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.social-links a:hover {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 0 1rem;
+  }
+
+  .footer-container {
+    padding: 0 1rem;
+  }
+
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-bottom p {
+    order: 2;
+  }
+
+  .social-links {
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+// Newsletter subscription handler
+document.addEventListener('DOMContentLoaded', () => {
+  const forms = document.querySelectorAll('.newsletter-form');
+  forms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = form.querySelector('input[type="email"]').value;
+      ToastManager?.success(`Newsletter subscription request sent for ${email}`);
+      form.reset();
+    });
+  });
+});
+</script>

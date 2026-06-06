@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - ECETX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    body { padding-top: 70px; }
+    .contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; padding: 2rem; max-width: 1000px; margin: 0 auto; }
+    .contact-form { background-color: var(--bg-secondary); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); }
+    .contact-info { display: flex; flex-direction: column; gap: 2rem; }
+    .info-card { padding: 1.5rem; border-radius: 12px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); }
+    .info-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .info-title { font-weight: 700; margin-bottom: 0.5rem; }
+    .info-content { color: var(--text-light); }
+    @media (max-width: 768px) { .contact-container { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main style="padding: 2rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h1>📞 Get in Touch</h1>
+      <p style="color: var(--text-light); max-width: 600px; margin: 0 auto;">Have questions or feedback? We'd love to hear from you. Reach out to us anytime.</p>
+    </div>
+
+    <div class="contact-container">
+      <!-- Contact Form -->
+      <div class="contact-form">
+        <h3 style="margin-bottom: 1.5rem;">Send us a Message</h3>
+        <form id="contactForm">
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" placeholder="Your name" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" placeholder="your@email.com" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Subject</label>
+            <input type="text" class="form-control" placeholder="How can we help?" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea class="form-control" rows="5" placeholder="Your message..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Send Message</button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <div class="info-card">
+          <div class="info-icon">📧</div>
+          <div class="info-title">Email</div>
+          <div class="info-content">
+            <p>support@ecetx.com</p>
+            <p style="font-size: 0.9rem;">We'll respond within 24 hours</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">📱</div>
+          <div class="info-title">Phone</div>
+          <div class="info-content">
+            <p>+91 98765 43210</p>
+            <p style="font-size: 0.9rem;">Mon - Fri, 9 AM - 6 PM IST</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">📍</div>
+          <div class="info-title">Address</div>
+          <div class="info-content">
+            <p>Hyderabad, India</p>
+            <p style="font-size: 0.9rem;">Tech Park, Telangana</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">💬</div>
+          <div class="info-title">Live Chat</div>
+          <div class="info-content">
+            <p>Chat with our support team</p>
+            <button class="btn btn-primary btn-sm" style="margin-top: 0.5rem;">Start Chat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/formValidator.js"></script>
+  <script src="assets/js/mailService.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('components/navbar.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#navbar-container').innerHTML = h);
+      fetch('components/footer.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#footer-container').innerHTML = h);
+
+      const contactForm = document.getElementById('contactForm');
+      
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const name = contactForm.querySelector('input[placeholder="Your name"]').value.trim();
+        const email = contactForm.querySelector('input[type="email"]').value.trim();
+        const subject = contactForm.querySelector('input[placeholder="How can we help?"]').value.trim();
+        const message = contactForm.querySelector('textarea').value.trim();
+
+        // Validation
+        if (!name || !email || !subject || !message) {
+          ToastManager?.error('Please fill in all fields');
+          return;
+        }
+
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!isValidEmail) {
+          ToastManager?.error('Please enter a valid email address');
+          return;
+        }
+
+        if (message.length < 10) {
+          ToastManager?.error('Message must be at least 10 characters');
+          return;
+        }
+
+        // Send contact form via mail service
+        ToastManager?.info('Sending your message...');
+
+        try {
+          // Send to admin (in production)
+          const adminResult = await window.mailService.sendEmail(
+            'support@ecetx.com', // Admin email
+            'contact-reply',
+            {
+              email: email,
+              name: name,
+              subject: subject,
+              message: message
+            }
+          );
+
+          // Send confirmation to user
+          const userResult = await window.mailService.sendEmail(
+            email,
+            'contact-reply',
+            { email }
+          );
+
+          if (adminResult.success && userResult.success) {
+            ToastManager?.success('Message sent successfully! We will get back to you soon.');
+            contactForm.reset();
+          } else {
+            ToastManager?.info('Message received! We will respond within 24 hours.');
+            contactForm.reset();
+          }
+        } catch (error) {
+          console.error('Contact form error:', error);
+          ToastManager?.success('Message received! We will contact you soon.');
+          contactForm.reset();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

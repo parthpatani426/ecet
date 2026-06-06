@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice - ECETX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    body { padding-top: 70px; }
+    .problem-card { padding: 2rem; border-radius: 12px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+    .problem-number { font-size: 0.85rem; color: var(--text-light); }
+    .problem-title { font-size: 1.2rem; font-weight: 700; margin: 0.5rem 0; }
+    .difficulty { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .difficulty.easy { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .difficulty.medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .difficulty.hard { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+    .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .topic-btn { padding: 1rem; border-radius: 8px; background-color: var(--bg-secondary); border: 2px solid transparent; cursor: pointer; text-align: center; transition: var(--transition); }
+    .topic-btn:hover { border-color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main style="padding: 2rem;">
+    <div class="container-fluid" style="max-width: 900px;">
+      <h1>✏️ Practice Problems</h1>
+      <p style="color: var(--text-light); margin-bottom: 2rem;">Solve problems to improve your skills</p>
+
+      <!-- Topic Filter -->
+      <div style="margin-bottom: 2rem;">
+        <h5>Select Topic</h5>
+        <div class="topics-grid" id="topicsGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Problems List -->
+      <div id="problemsContainer">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/data/mockData.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('components/navbar.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#navbar-container').innerHTML = h);
+      fetch('components/footer.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#footer-container').innerHTML = h);
+      renderProblems();
+    });
+
+    function renderProblems() {
+      const container = document.getElementById('problemsContainer');
+      container.innerHTML = mockData.questions.map((q, i) => `
+        <div class="problem-card">
+          <div class="problem-number">Problem ${i + 1}</div>
+          <div class="problem-title">${q.question}</div>
+          <div class="difficulty medium" style="margin: 1rem 0;">${q.category}</div>
+          <div style="margin: 1rem 0;">
+            ${q.options.map((opt, idx) => `
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="q${i}" id="q${i}o${idx}" value="${idx}">
+                <label class="form-check-label" for="q${i}o${idx}">${opt}</label>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-primary btn-sm">Check Answer</button>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

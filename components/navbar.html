@@ -1,0 +1,229 @@
+<!-- ECETX Navbar Component -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a href="index.html" class="navbar-brand">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">ECETX</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="navbar-menu">
+      <a href="index.html" class="navbar-link" data-nav-link>Home</a>
+      <a href="learn.html" class="navbar-link" data-nav-link>Learn</a>
+      <a href="practice.html" class="navbar-link" data-nav-link>Practice</a>
+      <a href="mock-tests.html" class="navbar-link" data-nav-link>Tests</a>
+      <a href="leaderboard.html" class="navbar-link" data-nav-link>Leaderboard</a>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="navbar-actions">
+      <select id="branchSelector" class="form-select form-select-sm" style="width: 200px; display: none;">
+        <!-- Populated by JavaScript -->
+      </select>
+      
+      <button class="btn-icon btn-theme" data-theme-toggle title="Toggle Dark Mode">🌙</button>
+      <a href="profile.html" class="btn-icon" title="Profile">👤</a>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuBtn" class="btn-mobile-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Navbar Overlay for Mobile -->
+<div class="navbar-overlay"></div>
+
+<style>
+/* Navbar Styles */
+.navbar {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.navbar-brand:hover {
+  color: var(--primary);
+}
+
+.brand-icon {
+  font-size: 1.8rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  flex: 1;
+  margin-left: 2rem;
+}
+
+.navbar-link {
+  color: var(--text-light);
+  font-weight: 500;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+  position: relative;
+}
+
+.navbar-link:hover,
+.navbar-link.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-theme {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0.5rem;
+}
+
+.btn-theme:hover {
+  transform: rotate(20deg);
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-tertiary);
+  color: var(--text-dark);
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-icon:hover {
+  background-color: var(--primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.btn-mobile-menu span {
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-dark);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .navbar-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+  }
+
+  .navbar.show .navbar-menu {
+    display: flex;
+  }
+
+  .navbar-link {
+    padding: 1rem 2rem;
+    border: none;
+    border-left: 3px solid transparent;
+  }
+
+  .navbar-link.active {
+    border-left-color: var(--primary);
+    border-bottom: none;
+  }
+
+  .btn-mobile-menu {
+    display: flex;
+  }
+
+  .navbar-actions {
+    gap: 0.5rem;
+  }
+
+  .form-select {
+    width: 150px !important;
+  }
+}
+
+.navbar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.navbar-overlay.show {
+  display: block;
+}
+</style>

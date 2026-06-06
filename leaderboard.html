@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard - ECETX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    body { padding-top: 70px; }
+    .leaderboard-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+    .rank-card { display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-radius: 12px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); margin-bottom: 1rem; transition: var(--transition); }
+    .rank-card:hover { transform: translateX(8px); box-shadow: var(--card-shadow-lg); }
+    .rank-position { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; background: var(--primary); color: white; font-weight: 700; font-size: 1.2rem; flex-shrink: 0; }
+    .rank-position.top1 { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3); }
+    .rank-position.top2 { background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%); box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3); }
+    .rank-position.top3 { background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%); box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3); }
+    .rank-info { flex: 1; }
+    .rank-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem; }
+    .rank-meta { display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-light); }
+    .rank-stats { display: flex; gap: 2rem; align-items: center; text-align: right; }
+    .stat-group { font-size: 0.9rem; }
+    .stat-value { font-weight: 700; color: var(--primary); font-size: 1.2rem; }
+    .badge-medal { font-size: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="leaderboard-container">
+    <div style="margin-bottom: 2rem;">
+      <h1>🏆 Leaderboard</h1>
+      <p style="color: var(--text-light);">Top performers this month</p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div style="margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+      <button class="btn btn-outline-primary btn-sm active">This Month</button>
+      <button class="btn btn-outline-primary btn-sm">This Week</button>
+      <button class="btn btn-outline-primary btn-sm">All Time</button>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div id="leaderboardContainer">
+      <!-- Populated by JavaScript -->
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/data/mockData.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('components/navbar.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#navbar-container').innerHTML = h);
+      fetch('components/footer.html')
+        .then(r => r.text())
+        .then(h => document.querySelector('#footer-container').innerHTML = h);
+      renderLeaderboard();
+    });
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardContainer');
+      container.innerHTML = mockData.leaderboard.map((user, i) => {
+        const positionClass = user.rank === 1 ? 'top1' : user.rank === 2 ? 'top2' : user.rank === 3 ? 'top3' : '';
+        const medal = user.rank === 1 ? '🥇' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : '';
+        return `
+          <div class="rank-card">
+            <div class="rank-position ${positionClass}">${user.rank}</div>
+            <div class="rank-info">
+              <div class="rank-name">${user.avatar} ${user.name}</div>
+              <div class="rank-meta">
+                <span>${user.branch.toUpperCase()}</span>
+                <span>🎓 Branch Rank</span>
+              </div>
+            </div>
+            <div class="rank-stats">
+              <div class="stat-group">
+                <div class="stat-value">${user.score}</div>
+                <div style="font-size: 0.75rem; color: var(--text-light);">Points</div>
+              </div>
+              <div class="stat-group">
+                <div class="stat-value">🔥${user.streak}</div>
+                <div style="font-size: 0.75rem; color: var(--text-light);">Streak</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>
