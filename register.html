@@ -72,17 +72,17 @@
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">First Name</label>
-          <input type="text" class="form-control" placeholder="John" required>
+          <input type="text" class="form-control" placeholder="NAME" required>
         </div>
         <div class="form-group">
           <label class="form-label">Last Name</label>
-          <input type="text" class="form-control" placeholder="Doe" required>
+          <input type="text" class="form-control" placeholder="SURNAME" required>
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">Email Address</label>
-        <input type="email" class="form-control" placeholder="your@email.com" required>
+        <input type="email" class="form-control" placeholder="your@gmail.com" required>
       </div>
 
       <div class="form-group">
@@ -124,6 +124,7 @@
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/ui.js"></script>
   <script src="assets/js/formValidator.js"></script>
+  <script src="assets/js/api-client.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const registerForm = document.getElementById('registerForm');
@@ -150,8 +151,8 @@
           return;
         }
 
-        if (password.length < 6) {
-          ToastManager?.error('Password must be at least 6 characters');
+        if (password.length < 8) {
+          ToastManager?.error('Password must be at least 8 characters');
           return;
         }
 
@@ -166,37 +167,29 @@
           return;
         }
 
-        // Simulate registration
-        ToastManager?.info('Creating your account...');
-        
-        setTimeout(() => {
-          const userData = {
-            firstName,
-            lastName,
-            email,
-            branch,
-            registrationDate: new Date().toISOString(),
-            verified: false
-          };
+        // Disable submit button
+        const submitBtn = registerForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Creating account...';
+
+        try {
+          const fullName = `${firstName} ${lastName}`;
+          const response = await window.apiClient.register(fullName, email, password, branch);
           
-          localStorage.setItem('user-email', email);
-          localStorage.setItem('user-data', JSON.stringify(userData));
-          localStorage.setItem('ecetx-selected-branch', branch);
+          // Store email for verification
+          sessionStorage.setItem('verify_email', email);
           
-          // Send verification email
-          if (window.formValidator) {
-            window.formValidator.submitEmail(email, 'registration').then(() => {
-              setTimeout(() => {
-                window.location.href = 'dashboard.html';
-              }, 500);
-            });
-          } else {
-            ToastManager?.success('Account created successfully!');
-            setTimeout(() => {
-              window.location.href = 'dashboard.html';
-            }, 500);
-          }
-        }, 1500);
+          ToastManager?.success('✅ Registration successful! Verify your email.');
+          setTimeout(() => {
+            window.location.href = 'email-verification.html';
+          }, 1500);
+        } catch (error) {
+          console.error('❌ Registration error:', error);
+          ToastManager?.error(`❌ ${error.message}`);
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
       });
     });
   </script>

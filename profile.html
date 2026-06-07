@@ -63,7 +63,10 @@
       <!-- Tabs -->
       <ul class="nav nav-tabs" role="tablist" style="margin-bottom: 2rem;">
         <li class="nav-item">
-          <a class="nav-link active" id="badges-tab" data-bs-toggle="tab" href="#badges" role="tab">Badges & Achievements</a>
+          <a class="nav-link active" id="account-tab" data-bs-toggle="tab" href="#account" role="tab">Account Settings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="badges-tab" data-bs-toggle="tab" href="#badges" role="tab">Badges & Achievements</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="courses-tab" data-bs-toggle="tab" href="#courses" role="tab">Courses</a>
@@ -75,7 +78,39 @@
 
       <!-- Tab Content -->
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="badges" role="tabpanel">
+        <div class="tab-pane fade show active" id="account" role="tabpanel">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Account Information</h5>
+              <form>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" id="accountName" readonly>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="accountEmail" readonly>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Branch</label>
+                    <input type="text" class="form-control" id="accountBranch" readonly style="background-color: #f8f9fa;">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Member Since</label>
+                    <input type="text" class="form-control" id="accountDate" readonly>
+                  </div>
+                </div>
+                <p class="text-muted" style="font-size: 0.9rem;">
+                  ⚠️ <strong>Note:</strong> Your branch is locked and cannot be changed. It was selected during registration.
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="badges" role="tabpanel">
           <div class="badges-section" id="badgesContainer">
             <!-- Populated by JavaScript -->
           </div>
@@ -96,8 +131,10 @@
   <script src="assets/data/mockData.js"></script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/ui.js"></script>
+  <script src="assets/js/api-client.js"></script>
+  <script src="assets/js/auth-manager.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       fetch('components/navbar.html')
         .then(r => r.text())
         .then(h => document.querySelector('#navbar-container').innerHTML = h);
@@ -105,10 +142,26 @@
         .then(r => r.text())
         .then(h => document.querySelector('#footer-container').innerHTML = h);
       
-      const profile = mockData.userProfile;
-      document.getElementById('profileName').textContent = profile.name;
-      document.getElementById('profileEmail').textContent = profile.email;
+      // Get user data from API
+      if (window.authManager?.isAuthenticated) {
+        const user = window.authManager.user;
+        
+        document.getElementById('profileName').textContent = user.name;
+        document.getElementById('profileEmail').textContent = user.email;
+        
+        // Account settings
+        document.getElementById('accountName').value = user.name;
+        document.getElementById('accountEmail').value = user.email;
+        document.getElementById('accountBranch').value = user.branch_name || user.branch.toUpperCase();
+        document.getElementById('accountDate').value = new Date(user.created_at).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      }
       
+      // Badges
+      const profile = mockData.userProfile;
       const badgesContainer = document.getElementById('badgesContainer');
       badgesContainer.innerHTML = profile.badges.map(badge => `
         <div class="badge-item">

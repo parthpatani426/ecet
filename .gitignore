@@ -1,0 +1,15 @@
+.env
+.venv/
+venv/
+
+.vscode/
+
+__pycache__/
+*.pyc
+
+node_modules/
+.next/
+
+New Text Document.txt
+
+backend/test_db.py

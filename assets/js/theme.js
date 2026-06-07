@@ -34,13 +34,15 @@ class ThemeManager {
   updateThemeIcons(theme) {
     const toggleButtons = document.querySelectorAll('[data-theme-toggle]');
     toggleButtons.forEach(btn => {
+      // Use Bootstrap Icons only (no emoji innerHTML)
       if (theme === 'dark') {
-        btn.innerHTML = '☀️';
+        btn.innerHTML = '<i class="bi bi-sun-fill" aria-hidden="true"></i>';
         btn.setAttribute('title', 'Switch to Light Mode');
       } else {
-        btn.innerHTML = '🌙';
+        btn.innerHTML = '<i class="bi bi-moon-stars-fill" aria-hidden="true"></i>';
         btn.setAttribute('title', 'Switch to Dark Mode');
       }
+
     });
   }
 

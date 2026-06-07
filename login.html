@@ -74,6 +74,18 @@
         <input type="password" class="form-control" placeholder="••••••••" required>
       </div>
 
+      <div class="form-group">
+        <label class="form-label">Branch</label>
+        <select class="form-select" required id="branchSelect">
+          <option value="">Select your branch</option>
+          <option value="ece">Electronics & Communication Engineering</option>
+          <option value="eee">Electrical & Electronics Engineering</option>
+          <option value="cme">Computer Science & Engineering</option>
+          <option value="civil">Civil Engineering</option>
+          <option value="mechanical">Mechanical Engineering</option>
+        </select>
+      </div>
+
       <div class="form-check mb-3">
         <input type="checkbox" class="form-check-input" id="rememberMe">
         <label class="form-check-label" for="rememberMe">Remember me</label>
@@ -91,6 +103,7 @@
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/ui.js"></script>
   <script src="assets/js/formValidator.js"></script>
+  <script src="assets/js/api-client.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const loginForm = document.getElementById('loginForm');
@@ -100,15 +113,16 @@
         
         const email = loginForm.querySelector('input[type="email"]').value.trim();
         const password = loginForm.querySelector('input[type="password"]').value;
+        const branch = loginForm.querySelector('#branchSelect').value;
 
         // Validate
-        if (!email || !password) {
+        if (!email || !password || !branch) {
           ToastManager?.error('Please fill in all fields');
           return;
         }
 
-        if (password.length < 6) {
-          ToastManager?.error('Password must be at least 6 characters');
+        if (password.length < 8) {
+          ToastManager?.error('Password must be at least 8 characters');
           return;
         }
 
@@ -119,18 +133,25 @@
           return;
         }
 
-        // Simulate API call
-        ToastManager?.info('Signing in...');
-        
-        setTimeout(() => {
-          localStorage.setItem('user-email', email);
-          localStorage.setItem('login-time', new Date().toISOString());
-          ToastManager?.success('Login successful!');
+        // Disable submit button
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Signing in...';
+
+        try {
+          const response = await window.apiClient.login(email, password, branch);
+          ToastManager?.success('✅ Login successful!');
           
           setTimeout(() => {
             window.location.href = 'dashboard.html';
-          }, 500);
-        }, 1500);
+          }, 1500);
+        } catch (error) {
+          console.error('❌ Login error:', error);
+          ToastManager?.error(`❌ ${error.message}`);
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
       });
     });
   </script>

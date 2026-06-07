@@ -11,27 +11,31 @@
   <div class="sidebar-section">
     <h4>Quick Links</h4>
     <ul>
-      <li><a href="dashboard.html" data-nav-link>📊 Dashboard</a></li>
-      <li><a href="practice.html" data-nav-link>✏️ Practice</a></li>
-      <li><a href="mock-tests.html" data-nav-link>📝 Mock Tests</a></li>
-      <li><a href="ai-tutor.html" data-nav-link>🤖 AI Tutor</a></li>
-      <li><a href="rank-predictor.html" data-nav-link>📈 Rank Predictor</a></li>
+      <li><a href="dashboard.html" data-nav-link><i class="bi bi-speedometer2 me-2" aria-hidden="true"></i>Dashboard</a></li>
+      <li><a href="practice.html" data-nav-link><i class="bi bi-pencil-square me-2" aria-hidden="true"></i>Practice</a></li>
+      <li><a href="mock-tests.html" data-nav-link><i class="bi bi-clipboard2-check me-2" aria-hidden="true"></i>Mock Tests</a></li>
+      <li><a href="#" data-nav-link data-branch-guru><i class="bi bi-diagram-3 me-2" aria-hidden="true"></i>Branch Guru</a></li>
+
+      <li><a href="rank-predictor.html" data-nav-link><i class="bi bi-bar-chart me-2" aria-hidden="true"></i>Rank Predictor</a></li>
+
     </ul>
   </div>
 
   <div class="sidebar-section">
     <h4>Resources</h4>
     <ul>
-      <li><a href="#" data-nav-link>📚 Previous Papers</a></li>
-      <li><a href="#" data-nav-link>📖 Study Notes</a></li>
-      <li><a href="#" data-nav-link>🎯 Shortcuts</a></li>
+      <li><a href="#" data-nav-link><i class="bi bi-file-earmark-text me-2" aria-hidden="true"></i>Previous Papers</a></li>
+      <li><a href="#" data-nav-link><i class="bi bi-book me-2" aria-hidden="true"></i>Study Notes</a></li>
+      <li><a href="#" data-nav-link><i class="bi bi-lightning-charge me-2" aria-hidden="true"></i>Shortcuts</a></li>
+
     </ul>
   </div>
 
   <div class="sidebar-footer">
-    <a href="settings.html" class="btn btn-secondary btn-sm w-100">⚙️ Settings</a>
+    <a href="settings.html" class="btn btn-secondary btn-sm w-100"><i class="bi bi-gear" aria-hidden="true"></i> Settings</a>
   </div>
 </aside>
+
 
 <style>
 /* Sidebar Styles */
@@ -179,7 +183,9 @@
 // Render branches in sidebar
 function renderSidebarBranches() {
   const branchList = document.querySelector('.branch-list');
-  if (!branchList || !mockData) return;
+  // Public-safe: do not render branch UI from mock/fake data
+  if (!branchList || window.location.pathname.endsWith('index.html') || window.location.pathname === '/index.html') return;
+
 
   const selectedBranch = branchManager?.selectedBranch || localStorage.getItem('ecetx-selected-branch') || 'ece';
   

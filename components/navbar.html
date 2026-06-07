@@ -3,7 +3,7 @@
   <div class="navbar-container">
     <!-- Logo -->
     <a href="index.html" class="navbar-brand">
-      <span class="brand-icon">🎓</span>
+      <img src="assets/images/mainlogo.png" alt="ECETX Logo" class="brand-logo" style="height: 40px; width: auto;">
       <span class="brand-text">ECETX</span>
     </a>
 
@@ -22,8 +22,16 @@
         <!-- Populated by JavaScript -->
       </select>
       
-      <button class="btn-icon btn-theme" data-theme-toggle title="Toggle Dark Mode">🌙</button>
-      <a href="profile.html" class="btn-icon" title="Profile">👤</a>
+      <button class="btn-icon btn-theme" data-theme-toggle title="Toggle theme">
+        <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
+      </button>
+      <a href="profile.html" class="btn-icon" title="Profile">
+        <i class="bi bi-person" aria-hidden="true"></i>
+      </a>
+      <button id="logoutBtn" class="btn-icon" title="Logout" style="display: none;">
+        <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+      </button>
+
     </div>
 
     <!-- Mobile Menu Button -->

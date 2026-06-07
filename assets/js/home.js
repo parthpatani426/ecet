@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   loadNavbar();
   loadFooter();
-  renderBranches();
+  setupHomeStats();
 });
 
 function loadNavbar() {
@@ -31,20 +31,40 @@ function loadFooter() {
     .catch(err => console.error('Error loading footer:', err));
 }
 
-function renderBranches() {
-  const branchesGrid = document.getElementById('branchesGrid');
-  if (!branchesGrid || !mockData) return;
+async function setupHomeStats() {
+  // Backend-ready: fetch counters from API.
+  // If endpoints are not implemented yet, keep UI in "—" state.
+  const grid = document.getElementById('ecetxStatsGrid');
+  if (!grid) return;
 
-  branchesGrid.innerHTML = mockData.branches.map(branch => `
-    <div class="branch-card card">
-      <div class="branch-card-icon">${branch.icon}</div>
-      <h3>${branch.name}</h3>
-      <p>Specialized courses and resources for ${branch.name.toLowerCase()}</p>
-      <a href="learn.html?branch=${branch.id}" class="btn btn-primary btn-sm">
-        Explore Courses →
-      </a>
-    </div>
-  `).join('');
+  const endpoints = {
+    supported_branches: '/api/public/stats/supported-branches',
+    subjects_covered: '/api/public/stats/subjects-covered',
+    topics_covered: '/api/public/stats/topics-covered',
+    practice_questions: '/api/public/stats/practice-questions',
+    previous_papers: '/api/public/stats/previous-papers'
+  };
+
+  // Determine base API host from the existing apiClient if available
+  const apiBase = window.apiClient?.baseURL || 'http://localhost:8000/api';
+
+  await Promise.all(
+    Object.entries(endpoints).map(async ([key, ep]) => {
+      const el = grid.querySelector(`[data-stat="${key}"]`);
+      if (!el) return;
+      try {
+        const res = await fetch(`${apiBase}${ep.replace('/api', '')}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        // Accept either { value } or raw number
+        const value = typeof data === 'number' ? data : data.value;
+        el.textContent = value ?? '—';
+      } catch (e) {
+        // Keep dash if backend not ready
+        el.textContent = '—';
+      }
+    })
+  );
 }
 
 // Smooth scroll for navigation
@@ -56,3 +76,4 @@ document.addEventListener('scroll', () => {
     navbar?.classList.remove('scrolled');
   }
 });
+

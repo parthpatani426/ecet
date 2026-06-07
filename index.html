@@ -1,143 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ECETX - Premium Learning Platform for AP ECET Students</title>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECETX — AP ECET Preparation Platform</title>
+
   <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+
+  <style>
+    .page-section { padding: 4.5rem 0; }
+
+    .section-kicker {
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    [data-theme="dark"] .glass {
+      background: rgba(15, 23, 42, 0.35);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .soft-card {
+      border-radius: 18px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      box-shadow: var(--card-shadow);
+    }
+
+    .icon-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      border-radius: 999px;
+      padding: 0.55rem 0.9rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .hero-wrap { padding: 3.2rem 0 2.2rem; }
+
+    .hero-preview {
+      min-height: 420px;
+      border-radius: 18px;
+    }
+
+    .dashboard-shell {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.02);
+    }
+    [data-theme="dark"] .dashboard-shell { background: rgba(255,255,255,0.03); }
+
+    .dashboard-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 999px; }
+
+    .dashboard-body {
+      padding: 1rem;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+    @media (max-width: 576px) {
+      .mini-grid { grid-template-columns: 1fr; }
+    }
+
+    .mini-card {
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 0.95rem;
+      background: rgba(255,255,255,0.03);
+    }
+    [data-theme="dark"] .mini-card { background: rgba(255,255,255,0.02); }
+
+    .skeleton-line {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        rgba(99,102,241,.12) 0%,
+        rgba(139,92,246,.10) 35%,
+        rgba(14,165,233,.10) 65%,
+        rgba(99,102,241,.12) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.2rem; }
+    @media (max-width: 992px) { .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 576px) { .feature-grid { grid-template-columns: 1fr; } }
+
+    .how-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.2rem; }
+    @media (max-width: 992px) { .how-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 576px) { .how-grid { grid-template-columns: 1fr; } }
+
+    .guru-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+    @media (max-width: 992px) { .guru-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 576px) { .guru-grid { grid-template-columns: 1fr; } }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.2rem; }
+    @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 576px) { .stats-grid { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      padding: 1.1rem;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .trust-logos {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    @media (max-width: 992px) { .trust-logos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 576px) { .trust-logos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+    .trust-logo {
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      border-radius: 14px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      color: var(--text-light);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .nav-link-muted { color: var(--text-light); text-decoration: none; }
+    .nav-link-muted:hover { color: var(--primary); }
+  </style>
 </head>
+
 <body>
   <!-- Navbar -->
   <div id="navbar-container"></div>
 
-  <!-- Main Content -->
+  <!-- HERO -->
   <main class="main-content">
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-background"></div>
-      <div class="container-fluid">
-        <div class="row align-items-center min-vh-100">
-          <div class="col-lg-6 animate-slideInLeft">
-            <h1 class="hero-title">Master AP ECET<br>with Confidence</h1>
-            <p class="hero-subtitle">Premium learning platform designed for diploma students across all branches. Learn, practice, and excel with industry experts.</p>
-            
-            <div class="hero-buttons">
+    <section class="hero-wrap">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <!-- Copy -->
+          <div class="col-lg-6">
+            <div class="section-kicker">
+              <i class="bi bi-shield-lock"></i>
+              <span>Production-ready EdTech for AP ECET</span>
+            </div>
+
+            <h1 class="hero-title" style="margin-bottom: 0.9rem;">
+              ECETX
+              <br />
+              <span class="hero-subtitle-small" style="display:inline-block; margin-top:0.25rem;">
+                The Complete AP ECET Preparation Platform
+              </span>
+            </h1>
+
+            <p class="hero-subtitle mb-4" style="font-size: 1.05rem;">
+              Prepare smarter. Practice better. Rank higher.
+            </p>
+
+            <div class="d-flex flex-wrap gap-2 mb-4">
+              <div class="icon-pill">
+                <i class="bi bi-journal-check"></i>
+                <span>Structured Learning</span>
+              </div>
+              <div class="icon-pill">
+                <i class="bi bi-patch-check"></i>
+                <span>Exam Pattern Practice</span>
+              </div>
+              <div class="icon-pill">
+                <i class="bi bi-cpu"></i>
+                <span>Branch Guru System</span>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <div class="mb-2 fw-semibold text-dark">For Diploma Students of:</div>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-primary">ECE</span>
+                <span class="badge bg-primary">EEE</span>
+                <span class="badge bg-primary">CME</span>
+                <span class="badge bg-primary">Civil</span>
+                <span class="badge bg-primary">Mechanical</span>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3 flex-wrap">
               <a href="register.html" class="btn btn-primary btn-lg">
-                🚀 Get Started Free
+                <i class="bi bi-person-plus me-2"></i>
+                Get Started
               </a>
-              <a href="#features" class="btn btn-outline-primary btn-lg">
-                Learn More
+              <a href="login.html" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Login
               </a>
             </div>
 
-            <div class="hero-stats">
-              <div class="stat">
-                <h3>50K+</h3>
-                <p>Active Students</p>
-              </div>
-              <div class="stat">
-                <h3>100+</h3>
-                <p>Expert Teachers</p>
-              </div>
-              <div class="stat">
-                <h3>1000+</h3>
-                <p>Quality Problems</p>
-              </div>
+            <div class="mt-4">
+              <a href="#trust" class="nav-link-muted">
+                <i class="bi bi-arrow-down-circle me-2"></i>
+                Why students trust ECETX
+              </a>
             </div>
           </div>
 
-          <div class="col-lg-6 animate-slideInRight">
-            <div class="hero-image">
-              <div class="floating-card card-1">
-                <div class="icon">📱</div>
-                <div class="text">Mobile Learning</div>
-              </div>
-              <div class="floating-card card-2">
-                <div class="icon">🎯</div>
-                <div class="text">Targeted Practice</div>
-              </div>
-              <div class="floating-card card-3">
-                <div class="icon">🏆</div>
-                <div class="text">Achieve Goals</div>
-              </div>
-              <div class="main-illustration">
-                <div class="illustration-box">
-                  📚<br>Learning Hub
+          <!-- Dashboard Preview -->
+          <div class="col-lg-6">
+            <div class="hero-preview card hero-card glass shadow-lg p-3 p-lg-4">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="dots">
+                    <span class="dot" style="background: var(--primary);"></span>
+                    <span class="dot" style="background: var(--secondary);"></span>
+                    <span class="dot" style="background: var(--info);"></span>
+                  </div>
+                  <div class="fw-semibold text-dark">Dashboard Preview</div>
+                </div>
+                <div class="text-secondary small">
+                  <i class="bi bi-lock-fill me-1"></i>
+                  JWT Auth
                 </div>
               </div>
+
+              <div class="dashboard-shell">
+                <div class="dashboard-topbar">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-secondary">Today</span>
+                    <span class="text-secondary">Learning + practice plan</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-lightning-charge" aria-hidden="true"></i>
+                    <span class="text-secondary">Real-time progress</span>
+                  </div>
+                </div>
+
+                <div class="dashboard-body">
+                  <div class="mini-grid mb-3">
+                    <div class="mini-card">
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="fw-semibold">Practice Focus</div>
+                        <i class="bi bi-bullseye"></i>
+                      </div>
+                      <div class="skeleton-line mb-2"></div>
+                      <div class="skeleton-line" style="width: 72%;"></div>
+                    </div>
+                    <div class="mini-card">
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="fw-semibold">Branch Guru</div>
+                        <i class="bi bi-diagram-3"></i>
+                      </div>
+                      <div class="skeleton-line mb-2"></div>
+                      <div class="skeleton-line" style="width: 58%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="mini-card">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <div class="fw-semibold">Recommended Next Steps</div>
+                      <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                      <div class="d-flex align-items-center justify-content-between">
+                        <span class="text-secondary">Mock Test Drill</span>
+                        <span class="badge bg-primary">In progress</span>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-between">
+                        <span class="text-secondary">Core Concepts</span>
+                        <span class="badge bg-secondary">Ready</span>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-between">
+                        <span class="text-secondary">Revision Set</span>
+                        <span class="badge bg-info text-dark">Planned</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features-section">
-      <div class="container-fluid">
-        <h2 class="section-title">Why Choose ECETX?</h2>
-        <div class="features-grid">
-          <div class="feature-card card">
-            <div class="feature-icon">📚</div>
-            <h3>Comprehensive Courses</h3>
-            <p>Well-structured courses covering all topics with video lectures, notes, and examples.</p>
-          </div>
 
-          <div class="feature-card card">
-            <div class="feature-icon">✏️</div>
-            <h3>Unlimited Practice</h3>
-            <p>Thousands of practice problems with detailed solutions and difficulty levels.</p>
-          </div>
+    <!-- Trust -->
+    <section id="trust" class="page-section" aria-label="Trust">
+      <div class="container">
+        <div class="section-kicker">
+          <i class="bi bi-people"></i>
+          <span>Trusted by Students</span>
+        </div>
+        <h2 class="mb-3">Built for exam-day clarity</h2>
+        <p class="text-secondary mb-4" style="max-width: 760px;">
+          The ECETX experience is designed to feel consistent, modern, and focused — like the best SaaS and EdTech products.
+        </p>
 
-          <div class="feature-card card">
-            <div class="feature-icon">📝</div>
-            <h3>Mock Tests</h3>
-            <p>Full-length mock tests mimicking real exam patterns with instant performance analysis.</p>
-          </div>
-
-          <div class="feature-card card">
-            <div class="feature-icon">🤖</div>
-            <h3>AI Tutor</h3>
-            <p>AI-powered personal tutor available 24/7 to answer your doubts instantly.</p>
-          </div>
-
-          <div class="feature-card card">
-            <div class="feature-icon">📊</div>
-            <h3>Analytics</h3>
-            <p>Detailed performance analytics and insights to guide your preparation strategy.</p>
-          </div>
-
-          <div class="feature-card card">
-            <div class="feature-icon">🏆</div>
-            <h3>Gamification</h3>
-            <p>Study streaks, badges, and leaderboards to keep you motivated and engaged.</p>
-          </div>
+        <div class="trust-logos" aria-label="Trust logos">
+          <div class="trust-logo">Structured</div>
+          <div class="trust-logo">Practice</div>
+          <div class="trust-logo">Mentor</div>
+          <div class="trust-logo">Analytics</div>
+          <div class="trust-logo">Secure</div>
+          <div class="trust-logo">Responsive</div>
         </div>
       </div>
     </section>
 
-    <!-- Branches Section -->
-    <section class="branches-section">
-      <div class="container-fluid">
-        <h2 class="section-title">Choose Your Branch</h2>
-        <p class="section-subtitle">Specialized content for each engineering discipline</p>
-        
-        <div class="branches-grid" id="branchesGrid">
-          <!-- Populated by JavaScript -->
-        </div>
-      </div>
-    </section>
+    <!-- Final CTA -->
+    <section class="page-section" aria-label="Final CTA" style="padding-top: 0;">
+      <div class="container">
+        <div class="soft-card glass p-4 p-lg-5 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+          <div>
+            <div class="section-kicker" style="margin-bottom: 0.6rem;">
+              <i class="bi bi-stars"></i>
+              <span>Ready to start?</span>
+            </div>
+            <h3 class="mb-2">Join ECETX and get your Branch Guru workflow</h3>
+            <p class="text-secondary mb-0">Register, verify your email, login, and let your branch be applied automatically.</p>
+          </div>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="container-fluid">
-        <h2>Ready to Transform Your Learning?</h2>
-        <p>Join thousands of successful ECET students preparing for their exams</p>
-        <a href="register.html" class="btn btn-primary btn-lg">Start Your Free Trial</a>
+          <div class="d-flex gap-3 flex-wrap">
+            <a href="register.html" class="btn btn-primary btn-lg">
+              <i class="bi bi-person-plus me-2"></i>
+              Create Account
+            </a>
+            <a href="login.html" class="btn btn-outline-primary btn-lg">
+              <i class="bi bi-box-arrow-in-right me-2"></i>
+              Login
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -147,9 +386,9 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/data/mockData.js"></script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/ui.js"></script>
   <script src="assets/js/home.js"></script>
 </body>
 </html>
+

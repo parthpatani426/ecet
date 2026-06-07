@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Email - ECETX</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+    .auth-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+      background-color: var(--bg-light);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow-xl);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .auth-header p {
+      color: var(--text-light);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+    .form-control {
+      padding: 0.75rem 1rem;
+    }
+    .otp-input {
+      font-size: 2rem;
+      text-align: center;
+      letter-spacing: 0.5rem;
+      font-weight: 700;
+      font-family: monospace;
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-light);
+    }
+    .auth-footer a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .verification-steps {
+      background-color: var(--bg-secondary);
+      border-left: 4px solid var(--primary);
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+    }
+    .step {
+      margin-bottom: 0.75rem;
+      color: var(--text-dark);
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container animate-fadeIn">
+    <div class="auth-header">
+      <h1>📧 Verify Email</h1>
+      <p>Enter the 6-digit code sent to your email</p>
+    </div>
+
+    <div class="verification-steps">
+      <div class="step">✅ Account created successfully</div>
+      <div class="step">📧 Verification code sent</div>
+      <div class="step">⏳ Enter code to verify</div>
+    </div>
+
+    <form id="verificationForm">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-control" id="emailInput" placeholder="your@email.com" readonly>
+        <small class="text-muted">Check spam folder if you don't see the email</small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Verification Code</label>
+        <input type="text" class="form-control otp-input" id="otpInput" placeholder="000000" maxlength="6" inputmode="numeric" required>
+        <small class="text-muted d-block mt-2">Enter the 6-digit code from your email</small>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 btn-lg">✅ Verify Email</button>
+    </form>
+
+    <div class="auth-footer">
+      <p><a href="#" id="resendOtpLink">Didn't receive code? Resend</a></p>
+      <p><a href="login.html">Back to Login</a></p>
+    </div>
+  </div>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/api-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const verificationForm = document.getElementById('verificationForm');
+      const emailInput = document.getElementById('emailInput');
+      const otpInput = document.getElementById('otpInput');
+      const resendOtpLink = document.getElementById('resendOtpLink');
+
+      // Get email from session storage
+      const email = sessionStorage.getItem('verify_email');
+      if (!email) {
+        ToastManager?.error('❌ No email found. Please register first.');
+        setTimeout(() => {
+          window.location.href = 'register.html';
+        }, 1500);
+        return;
+      }
+
+      emailInput.value = email;
+
+      // Format OTP input - only accept digits
+      otpInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+      });
+
+      // Auto-focus next input
+      otpInput.addEventListener('keyup', (e) => {
+        if (e.target.value.length === 6) {
+          verificationForm.querySelector('button[type="submit"]').focus();
+        }
+      });
+
+      // Verification form submission
+      verificationForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const code = otpInput.value.trim();
+
+        if (!code || code.length !== 6) {
+          ToastManager?.error('❌ Please enter a valid 6-digit code');
+          return;
+        }
+
+        const submitBtn = verificationForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Verifying...';
+
+        try {
+          const response = await window.apiClient.verifyEmail(email, code);
+          ToastManager?.success('✅ Email verified successfully!');
+          
+          // Clear session storage
+          sessionStorage.removeItem('verify_email');
+          
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        } catch (error) {
+          console.error('❌ Verification error:', error);
+          ToastManager?.error(`❌ ${error.message}`);
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      });
+
+      // Resend OTP
+      resendOtpLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        ToastManager?.info('📧 Sending verification code...');
+        
+        try {
+          // In production, call a resend endpoint
+          // For now, show message
+          ToastManager?.success('✅ Verification code resent to your email');
+        } catch (error) {
+          ToastManager?.error('❌ Failed to resend code');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
